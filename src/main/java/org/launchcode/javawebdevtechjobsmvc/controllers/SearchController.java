@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static org.launchcode.javawebdevtechjobsmvc.controllers.ListController.columnChoices;
 import static org.launchcode.javawebdevtechjobsmvc.models.JobData.*;
@@ -29,7 +30,7 @@ public class SearchController {
 
 
     @PostMapping("results")
-    public String displaySearchResults(Model model, @RequestParam String searchTerm, String column, Job job) {
+    public String displaySearchResults(Model model, String searchType, @RequestParam String searchTerm) {
         ArrayList<Job> jobs;
         model.addAttribute("columns", columnChoices); // this keeps the radio buttons there
 
@@ -38,10 +39,11 @@ public class SearchController {
             model.addAttribute("jobs", jobs); // this is the ${jobs} in the search.html
             return "search";
         } else {
-            jobs = JobData.findByColumnAndValue(column, searchTerm);
+            jobs = JobData.findByColumnAndValue(searchType, searchTerm);
             model.addAttribute("jobs", jobs);
-            model.addAttribute("title", "Jobs with " + columnChoices.get(column) + ": " + searchTerm);
+            model.addAttribute("title", "Jobs with " + columnChoices.get(searchType) + ": " + searchTerm);
         }
+
         return "search";
     }
 }
